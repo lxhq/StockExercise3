@@ -98,4 +98,19 @@ public class Resource {
             throw new TickerNotValidException();
         }
     }
+
+//    @GET
+//    @Path("/stockValues/{ticker}/{date}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getStockValues(@PathParam("ticker") String ticker, @PathParam("date") String date) throws TickerNotValidException {
+//        try {
+//            return Response
+//                    .status(Response.Status.OK)
+//                    .entity(repository.getStock(ticker))
+//                    .type(MediaType.APPLICATION_JSON)
+//                    .build();
+//        } catch (IllegalArgumentException e) {
+//            throw new TickerNotValidException();
+//        }
+//    }
 }

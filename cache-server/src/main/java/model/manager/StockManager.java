@@ -11,12 +11,6 @@ public interface StockManager {
     boolean isCached(String stockSymbol);
 
     /**
-     * Fetch Stock prices for the given ticker from the Internet and cache them into a local file
-     * @param stockSymbol the stock ticker
-     */
-    void refresh(String stockSymbol);
-
-    /**
      * Return the stock price with the given ticker and date.
      *
      * @param date the given date to get stock value

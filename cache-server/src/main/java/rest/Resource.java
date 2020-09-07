@@ -1,6 +1,5 @@
 package rest;
 
-import model.manager.CheckingStock;
 import model.manager.StockManager;
 
 import javax.inject.Inject;
@@ -17,10 +16,6 @@ public class Resource {
     @Path("StockValid/{ticker}")
     @GET
     public Response isStockValid(@PathParam("ticker") String ticker) {
-        if (stockmanager.isCached(ticker)) {
-            return Response.ok(true).build();
-        }
-        stockmanager.refresh(ticker);
         return Response.ok(stockmanager.isCached(ticker)).build();
     }
 
