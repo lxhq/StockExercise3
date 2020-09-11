@@ -28,5 +28,5 @@ public interface Stock {
      * @param share the given number to buy in
      * @param date  the given date to buy in
      */
-    void addShare(double share, LocalDate date);
+    void addShare(double share, String date);
 }

@@ -1,6 +1,5 @@
 package model.manager;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,11 +27,11 @@ public class StockManagerImpl implements StockManager{
         return stockValues.containsKey(stockSymbol);
     }
 
-    public String searchStockValue(String tickerSymbol, LocalDate date) {
+    public String searchStockValue(String tickerSymbol, String date) {
         if (stockValues.containsKey(tickerSymbol)) {
             Map<String, StockPrices> map = stockValues.get(tickerSymbol).getTimeSeries();
-            if (map.containsKey(date.toString())) {
-                return map.get(date.toString()).getClose();
+            if (map.containsKey(date)) {
+                return map.get(date).getClose();
             }
         }
         return "";

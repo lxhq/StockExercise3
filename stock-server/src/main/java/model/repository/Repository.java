@@ -4,6 +4,7 @@ import json.BuyShare;
 import model.stock.Stock;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Repository {
 
@@ -37,4 +38,9 @@ public interface Repository {
      * @param ticker Stock symbol
      */
     Stock deleteStock(String ticker);
+
+    /**
+     * Get all stock prices
+     */
+    List<Map<String, List<Map<String, String>>>> getStocksPrice();
 }

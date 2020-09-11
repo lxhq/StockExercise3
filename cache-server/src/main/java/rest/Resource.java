@@ -5,7 +5,6 @@ import model.manager.StockManager;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
 
 @Path("/stocks")
 public class Resource {
@@ -22,7 +21,6 @@ public class Resource {
     @Path("StockValue/{ticker}/{date}")
     @GET
     public Response getStockValue(@PathParam("ticker") String ticker, @PathParam("date") String date) {
-        return Response.ok(stockmanager.searchStockValue(ticker, LocalDate.parse(date))).build();
+        return Response.ok(stockmanager.searchStockValue(ticker, date)).build();
     }
-
 }

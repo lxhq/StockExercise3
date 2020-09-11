@@ -1,6 +1,5 @@
 package rest;
 
-import client.CacheManager;
 import exceptions.TickerNotValidException;
 import json.BuyShare;
 import model.repository.Repository;
@@ -12,8 +11,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Path("/stocks")
 public class Resource {
@@ -45,7 +44,7 @@ public class Resource {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (IllegalArgumentException e) {
-            throw new TickerNotValidException();
+            throw new TickerNotValidException(e.getMessage());
         }
     }
 
@@ -61,7 +60,7 @@ public class Resource {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (IllegalArgumentException e) {
-            throw new TickerNotValidException();
+            throw new TickerNotValidException(e.getMessage());
         }
     }
 
@@ -77,7 +76,7 @@ public class Resource {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (IllegalArgumentException e) {
-            throw new TickerNotValidException();
+            throw new TickerNotValidException(e.getMessage());
         }
     }
 
@@ -88,29 +87,28 @@ public class Resource {
     public Response buyShares(@Valid final BuyShare buyShare) throws TickerNotValidException {
         try {
             Stock stock = repository.buyStock(buyShare);
-            double price =  CacheManager.stockValue(buyShare.getTicker(), buyShare.getDate());
             return Response
                     .status(Response.Status.OK)
                     .entity(stock)
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (IllegalArgumentException e) {
-            throw new TickerNotValidException();
+            throw new TickerNotValidException(e.getMessage());
         }
     }
 
-//    @GET
-//    @Path("/stockValues/{ticker}/{date}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getStockValues(@PathParam("ticker") String ticker, @PathParam("date") String date) throws TickerNotValidException {
-//        try {
-//            return Response
-//                    .status(Response.Status.OK)
-//                    .entity(repository.getStock(ticker))
-//                    .type(MediaType.APPLICATION_JSON)
-//                    .build();
-//        } catch (IllegalArgumentException e) {
-//            throw new TickerNotValidException();
-//        }
-//    }
+    @GET
+    @Path("/getStocksPrices")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStockValue() {
+        List<Map<String, List<Map<String, String>>>> res = repository.getStocksPrice();
+        GenericEntity<List<Map<String, List<Map<String, String>>>>> listWrapper = new GenericEntity<>(res){};
+        return Response
+                .status(Response.Status.OK)
+                .entity(listWrapper)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+
+    }
+
 }

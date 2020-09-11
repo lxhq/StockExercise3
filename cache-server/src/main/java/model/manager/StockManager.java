@@ -1,7 +1,5 @@
 package model.manager;
 
-import java.time.LocalDate;
-
 public interface StockManager {
     /**
      * Return true if the stockSymbol is cached in memory
@@ -16,5 +14,5 @@ public interface StockManager {
      * @param date the given date to get stock value
      * @return the stock value with given parameters
      */
-    String searchStockValue(String tickerSymbol, LocalDate date);
+    String searchStockValue(String tickerSymbol, String date);
 }

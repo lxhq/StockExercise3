@@ -19,6 +19,10 @@ public class CacheManager {
     static public double stockValue(String ticker, String date) {
         String uri = stockPriceURI + ticker + "/" + date;
         WebTarget target = client.target(uri);
-        return Double.valueOf(target.request(MediaType.TEXT_PLAIN).get(String.class));
+        String res = target.request(MediaType.TEXT_PLAIN).get(String.class);
+        if (res.isEmpty()) {
+            throw new IllegalArgumentException("The stock price in that date is not available");
+        }
+        return Double.valueOf(res);
     }
 }

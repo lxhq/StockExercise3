@@ -3,10 +3,10 @@ package model.repository;
 import client.CacheManager;
 import com.google.inject.Singleton;
 import json.BuyShare;
+import model.stock.Share;
 import model.stock.Stock;
 import model.stock.StockImpl;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Singleton
@@ -20,11 +20,16 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public Stock createStock(String ticker) {
-        if (!stocks.containsKey(ticker) && CacheManager.validTicker(ticker)) {
-            stocks.put(ticker, new StockImpl(ticker));
-            return stocks.get(ticker);
+        if (stocks.containsKey(ticker)) {
+            throw new IllegalArgumentException("This stock has already been added to repository");
         }
-        throw new IllegalArgumentException();
+        if (!CacheManager.validTicker(ticker)) {
+            throw new IllegalArgumentException("This ticker is not valid");
+        }
+        stocks.put(ticker, new StockImpl(ticker));
+        return stocks.get(ticker);
+
+
     }
 
     @Override
@@ -32,18 +37,22 @@ public class RepositoryImpl implements Repository {
         if (stocks.containsKey(ticker)) {
             return stocks.remove(ticker);
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("This ticker does not exist in the repository ");
     }
 
     @Override
     public Stock buyStock(BuyShare buyShare) {
-        if (stocks.containsKey(buyShare.getTicker())) {
-            stocks.get(buyShare.getTicker())
-                    .addShare(buyShare.getShares().doubleValue(),
-                            LocalDate.parse(buyShare.getDate()));
-            return stocks.get(buyShare.getTicker());
+        if (!stocks.containsKey(buyShare.getTicker())) {
+            throw new IllegalArgumentException("This ticker does not exist in the repository");
         }
-        throw new IllegalArgumentException();
+        try {
+            CacheManager.stockValue(buyShare.getTicker(), buyShare.getDate());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        Stock stock = stocks.get(buyShare.getTicker());
+        stock.addShare(buyShare.getShares().doubleValue(), buyShare.getDate());
+        return stock;
     }
 
     @Override
@@ -56,6 +65,25 @@ public class RepositoryImpl implements Repository {
         if (stocks.containsKey(ticker)) {
             return stocks.get(ticker);
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("This ticker does not exist in the repository");
+    }
+
+    @Override
+    public List<Map<String, List<Map<String, String>>>> getStocksPrice() {
+        List<Map<String, List<Map<String, String>>>> res = new ArrayList<>();
+        for (Stock stock : stocks.values()) {
+            Map<String, List<Map<String, String>>> map = new HashMap<>();
+            res.add(map);
+            List<Map<String, String>> list = new ArrayList<>();
+            map.put(stock.getStockSymbol(), list);
+            for (Share share : stock.getShares()) {
+                Map<String, String> temp = new HashMap<>();
+                temp.put("date", share.getDate());
+                temp.put("share", String.valueOf(share.getShare()));
+                temp.put("prices", CacheManager.stockValue(stock.getStockSymbol(), share.getDate()) + "$");
+                list.add(temp);
+            }
+        }
+        return res;
     }
 }

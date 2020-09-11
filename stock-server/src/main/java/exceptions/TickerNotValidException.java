@@ -10,4 +10,9 @@ public class TickerNotValidException extends Exception {
     public TickerNotValidException(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }

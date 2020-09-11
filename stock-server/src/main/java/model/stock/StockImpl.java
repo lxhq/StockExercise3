@@ -1,6 +1,5 @@
 package model.stock;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +32,8 @@ public class StockImpl implements Stock {
     }
 
     @Override
-    public void addShare(double share, LocalDate date) {
-        this.shares.add(new Share(share, date.toString()));
+    public void addShare(double share, String date) {
+        this.shares.add(new Share(share, date));
     }
 
 

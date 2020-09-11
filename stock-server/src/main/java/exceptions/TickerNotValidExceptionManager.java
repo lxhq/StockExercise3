@@ -8,6 +8,6 @@ import javax.ws.rs.ext.Provider;
 public class TickerNotValidExceptionManager implements ExceptionMapper<TickerNotValidException> {
     @Override
     public Response toResponse(TickerNotValidException exception) {
-        return Response.status(200).entity("This ticker is not valid").build();
+        return Response.status(200).entity(exception.toString()).build();
     }
 }
